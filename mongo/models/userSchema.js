@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const WalletTxn = require("./walletTxnSchema");
 require("../db");
 
 const userSchema = new mongoose.Schema({
@@ -30,11 +31,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    minLength: 6,
+    // minLength: 6,
   },
   balance: [
     {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "WalletTxn"
     }
   ],
   token: {

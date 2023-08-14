@@ -1,6 +1,7 @@
 const express = require('express')
 const bcrypt = require('bcryptjs')
 const User = require('../mongo/models/userSchema')
+const WalletTxn = require('../mongo/models/walletTxnSchema')
 
 const router = new express.Router()
 
@@ -25,9 +26,21 @@ router.post('/signup', async(req, res)=>{
         await user.generateAuthToken()
         bcrypt.hash(user.password, 8, async function(err, hash) {
             user.password = hash
-            await user.save()
-            res.send({ user })
         });
+        const walletInit = {
+            userId: user._id,
+            balance: 0,
+            amount: 0,
+            txnType: "Initialisation"
+        }
+
+        const init = new WalletTxn(walletInit)
+        await init.save()
+        user.balance.push(init)
+        await user.save()
+        res.send({ user })
+
+        // console.log("user", user)
     } catch (e) {
         console.log(e)
         if(e.code = 11000){
@@ -59,6 +72,17 @@ router.post('/login', async (req, res) => {
         else {
             res.status(404).send("Wrong credentials")
         }
+    }
+})
+
+router.get('/getBalance', userAuth, async(req,res)=>{
+    try {
+        const user = await req.user.populate("balance")
+        const balance = user.balance[user.balance.length-1].balance
+        // console.log("bal", balance)
+        res.status(200).send(balance.toString())
+    } catch (error) {
+        res.send(error)
     }
 })
 
