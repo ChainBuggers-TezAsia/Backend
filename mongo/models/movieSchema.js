@@ -14,6 +14,10 @@ const movieSchema = new mongoose.Schema({
     required: true
     // yyyy-mm-dd
   },
+  image:{
+    type:String,
+    required: true
+  },
   likes:{
     type: Number,
     default: 0
