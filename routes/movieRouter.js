@@ -46,7 +46,7 @@ router.post('/addTheatre',theatreAuth, async(req, res)=>{
 
 router.get('/getAllMovies', async(req,res)=>{
     try {
-        const data = await Movie.find({})
+        const data = await Movie.find({}).populate("theatreId")
         res.send(data)
     } catch (error) {
         res.send(error)
