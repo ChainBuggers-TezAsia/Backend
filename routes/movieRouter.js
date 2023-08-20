@@ -44,7 +44,7 @@ router.post('/addTheatre',theatreAuth, async(req, res)=>{
     }
 })
 
-router.get('/getAllMovies',userAuth, async(req,res)=>{
+router.get('/getAllMovies', async(req,res)=>{
     try {
         const data = await Movie.find({})
         res.send(data)
