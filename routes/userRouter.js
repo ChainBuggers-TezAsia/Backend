@@ -82,6 +82,13 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/addAddress/:id", userAuth, async(req,res)=>{
+  const user = await req.user
+  user.walletAdd = req.params.id
+  await user.save()
+  res.send(user)
+})
+
 router.get("/getBalance", userAuth, async (req, res) => {
   try {
     const user = await req.user.populate("balance");

@@ -22,6 +22,9 @@ const userSchema = new mongoose.Schema({
       }
     },
   },
+  walletAdd:{
+    type: String
+  },
   phone: {
     type: String,
     required: true,
