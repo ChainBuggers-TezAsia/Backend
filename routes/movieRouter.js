@@ -3,6 +3,7 @@ const Movie = require('../mongo/models/movieSchema')
 const Theatre = require('../mongo/models/theatreSchema')
 const theatreAuth = require('../middlewares/theatreAuth')
 const userAuth = require('../middlewares/userAuth')
+const Ticket = require('../mongo/models/soledTickSchema')
 
 const router = new express.Router()
 
@@ -59,6 +60,35 @@ router.get('/getTheatres/:movieId',userAuth, async(req,res)=>{
         const theatres = movie.theatreId
         res.send(theatres)
 
+    } catch (error) {
+        res.send(error)
+    }
+})
+
+
+router.post('/ticketsold', async(req,res)=>{
+    try {
+        const ticket = new Ticket({
+            seat: req.body.seat,
+            movie:req.body.movie,
+            theatre: req.body.theatre,
+            listed: false
+        })
+        await ticket.save()
+         res.send(ticket)
+    } catch (error) {
+        res.send(error)
+    }
+})
+
+
+router.get('/tickets/:movieId/:theatreId', async(req,res)=>{
+    try {
+        const tickets = await Ticket.find({$and: [
+            { movie: req.params.movieId },
+            { theatre: req.params.theatreId }
+          ]})
+          res.send(tickets)
     } catch (error) {
         res.send(error)
     }

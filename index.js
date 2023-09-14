@@ -1,4 +1,5 @@
 const express = require('express')
+// import serverless from 'serverless-http';
 const cors = require('cors')
 
 require('./mongo/db')
