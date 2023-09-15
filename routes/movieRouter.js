@@ -72,6 +72,7 @@ router.post('/ticketsold', async(req,res)=>{
             seat: req.body.seat,
             movie:req.body.movie,
             theatre: req.body.theatre,
+            user:req.body.user,
             listed: false
         })
         await ticket.save()
@@ -89,6 +90,28 @@ router.get('/tickets/:movieId/:theatreId', async(req,res)=>{
             { theatre: req.params.theatreId }
           ]})
           res.send(tickets)
+    } catch (error) {
+        res.send(error)
+    }
+})
+
+router.get('/myTickets/:userId', async(req,res)=>{
+    try {
+        const tickets = await Ticket.find({
+            user:req.params.userId
+        }).populate('user').populate('movie').populate('theatre')
+        res.send(tickets)
+    } catch (error) {
+        res.send(error)
+    }
+})
+
+router.post('/ticket/resale/:id', async(req,res)=>{
+    try {
+        let ticket = await Ticket.findById(req.params.id)
+        ticket.listed = true
+        await ticket.save()
+        res.send(ticket)
     } catch (error) {
         res.send(error)
     }
